@@ -50,32 +50,20 @@ abstract class BaseController extends Controller
 {
     parent::initController($request, $response, $logger);
 
-    $this->session        = service('session');
-    $this->segment        = service('uri');
-    $this->validation     = \Config\Services::validation();
-    $this->encrypter      = \Config\Services::encrypter();
+    $this->session      = service('session');
+    $this->validation   = \Config\Services::validation();
+    $this->encrypter    = \Config\Services::encrypter();
     $this->ApplicationModel = new ApplicationModel();
 
-    $user = null;
-    $menuCategory = [];
-
-    // I-check muna kung may laman ang session bago mag-query
-    if (session()->has('email')) {
-        $user = $this->ApplicationModel->getUser(email: session()->get('email'));
-    }
-    
-    if (session()->has('role')) {
-        $menuCategory = $this->ApplicationModel->getAccessMenuCategory(session()->get('role'));
-    }
-
-    $segment = $this->segment->getSegment(1);
-    $subsegment = $segment ? $this->segment->getSegment(2) : '';
+    $uri        = service('uri');
+    $segment    = $uri->getSegment(1);
+    $subsegment = $segment ? $uri->getSegment(2) : '';
 
     $this->data = [
         'segment'      => $segment,
         'subsegment'   => $subsegment,
-        'user'         => $user,
-        'MenuCategory' => $menuCategory
+        'user'         => session()->get('user'),
+        'MenuCategory' => [],
     ];
 }
 }

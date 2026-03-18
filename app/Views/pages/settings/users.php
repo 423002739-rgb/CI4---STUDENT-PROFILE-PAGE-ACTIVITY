@@ -22,17 +22,17 @@
                         <tbody>
                             <?php foreach ($Users as $users) : ?>
                                 <tr>
-                                    <td><?= $users['fullname']; ?></td>
-                                    <td class="d-none d-md-table-cell"><?= $users['username']; ?></td>
+                                    <td><?= $users['name']; ?></td>
+                                    <td class="d-none d-md-table-cell"><?= $users['email']; ?></td>
                                     <td><span class="badge bg-success"><?= $users['role_name']; ?></span></td>
                                     <td><?= $users['created_at']; ?></td>
                                     <td>
-                                        <button class="btn btn-info btn-sm btnEdit" data-bs-toggle="modal" data-bs-target="#formUserModal" data-id="<?= $users['userID']; ?>" data-fullname="<?= $users['fullname']; ?>" data-username="<?= $users['username']; ?>" data-role="<?= $users['role']; ?>">Update</button>
+                                        <button class="btn btn-info btn-sm btnEdit" data-bs-toggle="modal" data-bs-target="#formUserModal" data-id="<?= $users['userID']; ?>" data-name="<?= $users['name']; ?>" data-email="<?= $users['email']; ?>" data-role="<?= $users['role']; ?>">Update</button>
 
-                                        <?php if ($users['username'] != session()->get('username')) : ?>
+                                        <?php if ($users['email'] != session()->get('user')['email']) : ?>
                                             <form action="<?= base_url('users/delete-user/' . $users['userID']); ?>" method="post" class="d-inline">
                                                 <input type="hidden" name="_method" value="DELETE">
-                                                <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure delete <?= $users['username']; ?> ?')">Delete</button>
+                                                <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure delete <?= $users['email']; ?> ?')">Delete</button>
                                             </form>
                                         <?php endif; ?>
                                     </td>
@@ -61,10 +61,10 @@
                         <tbody>
                             <?php foreach ($UserRole as $userRole) : ?>
                                 <tr>
-                                    <td><?= $userRole['role_name']; ?></td>
+                                    <td><?= $userRole['name']; ?></td>
                                     <td><a href="<?= base_url('users/role-access?role=' . $userRole['id']); ?>"> <span class="badge bg-primary">Access Menu</span></a></td>
                                     <td>
-                                        <button class="btn btn-info btn-sm btnEditRole" data-bs-toggle="modal" data-bs-target="#formRoleModal" data-id="<?= $userRole['id']; ?>" data-role="<?= $userRole['role_name']; ?>">Update</button>
+                                        <button class="btn btn-info btn-sm btnEditRole" data-bs-toggle="modal" data-bs-target="#formRoleModal" data-id="<?= $userRole['id']; ?>" data-role="<?= $userRole['name']; ?>">Update</button>
                                         <form action="<?= base_url('users/delete-role/' . $userRole['id']); ?>" method="post" class="d-inline">
                                             <input type="hidden" name="_method" value="DELETE">
                                             <button type="submit" class="btn btn-outline-danger btn-sm">
@@ -100,15 +100,15 @@
         });
         $(".btnEdit").click(function() {
             const userId = $(this).data('id');
-            const fullname = $(this).data('fullname');
-            const username = $(this).data('username');
+            const name = $(this).data('name');
+            const email = $(this).data('email');
             const role = $(this).data('role');
-            $('#modalTitle').html('form Data User');
+            $('#formUserModalLabel').html('Update User');
             $('.modal-footer button[type=submit]').html('Update User');
             $('.modal-content form').attr('action', '<?= base_url('users/update-user') ?>');
             $('#userID').val(userId);
-            $('#inputFullname').val(fullname);
-            $('#inputUsername').val(username);
+            $('#inputFullname').val(name);
+            $('#inputUsername').val(email);
             $('#inputUsername').attr('readonly', true);
             $('#inputPassword').attr('required', false);
             $('#inputRole').val(role);

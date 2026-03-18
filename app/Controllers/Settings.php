@@ -48,11 +48,17 @@ class Settings extends BaseController
 
     public function createUser()
     {
-        if (!$this->validate(['inputUsername' => ['rules' => 'is_unique[users.username]']])) {
+        if (!$this->validate(['inputUsername' => ['rules' => 'is_unique[users.email]']])) {
             session()->setFlashdata('notif_error', '<b>Failed to add new user</b> The user already exists! ');
             return redirect()->to(base_url('users'));
         }
-        $createUser = $this->ApplicationModel->createUser($this->request->getPost(null, FILTER_UNSAFE_RAW));
+        $post = $this->request->getPost(null, FILTER_UNSAFE_RAW);
+        $createUser = $this->ApplicationModel->createUser([
+            'name'     => $post['inputFullname'],
+            'email'    => $post['inputUsername'],
+            'password' => password_hash($post['inputPassword'], PASSWORD_BCRYPT),
+            'role'     => $post['inputRole'],
+        ]);
         if ($createUser) {
             session()->setFlashdata('notif_success', '<b>Successfully added new user</b> ');
             return redirect()->to(base_url('users'));
@@ -74,7 +80,14 @@ class Settings extends BaseController
 
     public function updateUser()
     {
-        $updateUser = $this->ApplicationModel->updateUser($this->request->getPost(null, FILTER_UNSAFE_RAW));
+        $post = $this->request->getPost(null, FILTER_UNSAFE_RAW);
+        $updateUser = $this->ApplicationModel->updateUser([
+            'userID'   => $post['userID'],
+            'name'     => $post['inputFullname'],
+            'email'    => $post['inputUsername'],
+            'password' => $post['inputPassword'] ?? '',
+            'role'     => $post['inputRole'],
+        ]);
         if ($updateUser) {
             session()->setFlashdata('notif_success', '<b>Successfully update user data</b> ');
             return redirect()->to(base_url('users'));

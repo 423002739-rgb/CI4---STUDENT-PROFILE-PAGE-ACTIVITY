@@ -53,13 +53,7 @@
                                 <dd class="col-sm-8"><?= esc($user['course'] ?? 'Not set') ?></dd>
 
                                 <dt class="col-sm-4">Year Level:</dt>
-                                <dd class="col-sm-8">
-                                    <?php if (!empty($user['year_level'])): ?>
-                                        Year <?= esc($user['year_level']) ?>
-                                    <?php else: ?>
-                                        Not set
-                                    <?php endif; ?>
-                                </dd>
+                                <dd class="col-sm-8"><?= !empty($user['year_level']) ? 'Year ' . esc($user['year_level']) : 'Not set' ?></dd>
 
                                 <dt class="col-sm-4">Section:</dt>
                                 <dd class="col-sm-8"><?= esc($user['section'] ?? 'Not set') ?></dd>
@@ -70,7 +64,6 @@
                                 <dt class="col-sm-4">Address:</dt>
                                 <dd class="col-sm-8"><?= esc($user['address'] ?? 'Not set') ?></dd>
                             </dl>
-
                             <hr>
 
                             <h5 class="mb-3">Account Information</h5>
